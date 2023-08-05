@@ -1,7 +1,6 @@
 export default [
   {
     id: 'a',
-    type: 'input',
     data: { label: 'Node A' },
     position: { x: 250, y: 25 },
   },
