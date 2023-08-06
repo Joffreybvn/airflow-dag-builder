@@ -79,25 +79,25 @@ function Flow() {
 
   return (
     <ReactFlowProvider>
-        <NodeCatalogBar/>
-        <div className="flex-[1_1_50%] box-border" ref={reactFlowWrapper}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-            onNodeClick={onNodeClick}
-            onPaneClick={onPaneClick}
-            className="flex"
-            fitView
-          >
-            <Controls />
-            <Background />
-          </ReactFlow>
+        <div className="realtive flex-1 box-border" ref={reactFlowWrapper}>
+            <NodeCatalogBar/>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onInit={setReactFlowInstance}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onNodeClick={onNodeClick}
+                onPaneClick={onPaneClick}
+                className="flex"
+                fitView
+            >
+                {/*<Controls />*/}
+                <Background />
+            </ReactFlow>
         </div>
         <NodeSettingBar selectedNode={selectedNode}/>
     </ReactFlowProvider>
