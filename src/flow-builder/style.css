@@ -1,0 +1,5 @@
+
+.vertical-text {
+    writing-mode: vertical-rl;
+    transform:scale(-1);
+}

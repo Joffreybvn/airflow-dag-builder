@@ -8,7 +8,7 @@ import {
     Collapse,
     initTE
 } from "tw-elements";
-import grip_vertical from './images/icons/grip-vertical.svg';
+import "./style.css"
 import toggle_left from './images/icons/toggle-left.svg';
 import toggle_right from './images/icons/toggle-right.svg';
 import python from './images/icons/python.svg';
@@ -25,11 +25,11 @@ function DraggableNode() {
             onDragStart={(event) => onDragStart(event, 'input')}
             draggable
         >
-            <div className="flex flex-col justify-center">
-                <img src={grip_vertical} alt="Drag and Drop" className="w-2 mx-2 opacity-40"/>
+            <div className="flex flex-col justify-center mx-2">
+                <div className="w-1 h-5 border-x border-slate-500"></div>
             </div>
             <div className="flex flex-col justify-center">
-                <img src={python} alt="Python" className="mr-4 w-12 h-12"/>
+                <img src={python} alt="Python" className="w-12 h-12"/>
             </div>
             <div className="flex flex-col py-2 pl-2">
                 <div className="text-left"><strong>PythonOperator</strong></div>
@@ -43,7 +43,8 @@ function DraggableNode() {
 export default () => {
     initTE({ Input, Collapse });
 
-    const [isCollapsableHidden, setCollapsableHidden] = useState(false);
+    const [displayCollapseArrowLeft, setDisplayCollapseArrowLeft] = useState(true);
+    const [displayCollapseButtonText, setDisplayCollapseButtonText] = useState(false);
     const collapsableBarElement = useRef(null);
 
     const onClickToggleCollapse = useCallback((event) => {
@@ -56,11 +57,16 @@ export default () => {
     }, []);
 
     window.addEventListener('hidden.te.collapse', () => {
-        setCollapsableHidden(true)
+        setDisplayCollapseArrowLeft(false);
+        setDisplayCollapseButtonText(true)
+    });
+
+    window.addEventListener('show.te.collapse', () => {
+        setDisplayCollapseButtonText(false)
     });
 
     window.addEventListener('shown.te.collapse', () => {
-        setCollapsableHidden(false)
+        setDisplayCollapseArrowLeft(true);
     });
 
     let nodes = [];
@@ -99,14 +105,16 @@ export default () => {
             {/* Expand / Collapse button */}
             <div
                 className="absolute my-5 right-7 flex flex-col justify-center cursor-pointer"
-                title="Toggle"
                 onClick={onClickToggleCollapse}
             >
                 <img
-                    src={isCollapsableHidden ? toggle_right : toggle_left}
+                    src={displayCollapseArrowLeft ? toggle_left : toggle_right}
                     alt="Toggle"
                     className="w-8 h-8"
                 />
+                <div className={"mt-5 vertical-text" + (displayCollapseButtonText ? '' : ' hidden')}>
+                    <strong>Modules catalog</strong>
+                </div>
             </div>
         </aside>
     );
