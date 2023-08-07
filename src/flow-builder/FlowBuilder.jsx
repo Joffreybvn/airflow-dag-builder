@@ -27,6 +27,7 @@ const getId = () => `dndnode_${id++}`;
 
 function Flow() {
     const reactFlowWrapper = useRef(null);
+    const reactFlowProviderWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -78,29 +79,34 @@ function Flow() {
   );
 
   return (
-    <ReactFlowProvider>
-        <div className="realtive flex-1 box-border" ref={reactFlowWrapper}>
-            <NodeCatalogBar/>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onInit={setReactFlowInstance}
-                onDrop={onDrop}
-                onDragOver={onDragOver}
-                onNodeClick={onNodeClick}
-                onPaneClick={onPaneClick}
-                className="flex"
-                fitView
-            >
-                {/*<Controls />*/}
-                <Background />
-            </ReactFlow>
-        </div>
-        <NodeSettingBar selectedNode={selectedNode}/>
-    </ReactFlowProvider>
+      <div className="flex w-screen h-screen" ref={reactFlowProviderWrapper}>
+          <ReactFlowProvider>
+            <div className="relative flex-1 box-border w-full h-full" ref={reactFlowWrapper}>
+                <NodeCatalogBar/>
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    onInit={setReactFlowInstance}
+                    onDrop={onDrop}
+                    onDragOver={onDragOver}
+                    onNodeClick={onNodeClick}
+                    onPaneClick={onPaneClick}
+                    className="flex"
+                    fitView
+                >
+                    {/*<Controls />*/}
+                    <Background />
+                </ReactFlow>
+            </div>
+            <NodeSettingBar
+                panelWrapper={reactFlowProviderWrapper}
+                selectedNode={selectedNode}
+            />
+        </ReactFlowProvider>
+      </div>
   );
 }
 

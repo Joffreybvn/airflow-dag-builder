@@ -4,7 +4,7 @@ export default [
     data: {
       label: 'Node A',
       task_id: null,
-      owner: null
+      python_callable: null
     },
     position: { x: 250, y: 25 },
   },
@@ -14,7 +14,7 @@ export default [
     data: {
       label: 'Node B',
       task_id: null,
-      owner: null
+      python_callable: null
     },
     position: { x: 100, y: 125 },
   },
@@ -23,7 +23,7 @@ export default [
     data: {
       label: 'Node C',
       task_id: null,
-      owner: null
+      python_callable: null
     },
     position: { x: 250, y: 250 },
   },
