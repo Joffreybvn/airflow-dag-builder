@@ -1,11 +1,9 @@
 import React, {
     useCallback,
-    useRef,
     useState
 } from 'react';
 import {
     Input,
-    Collapse,
     initTE
 } from "tw-elements";
 import "./style.css"
@@ -41,33 +39,14 @@ function DraggableNode() {
 
 
 export default () => {
-    initTE({ Input, Collapse });
+    initTE({ Input });
 
-    const [displayCollapseArrowLeft, setDisplayCollapseArrowLeft] = useState(true);
-    const [displayCollapseButtonText, setDisplayCollapseButtonText] = useState(false);
-    const collapsableBarElement = useRef(null);
+    const [collapsableCatalog, setCollapsableState] = useState(false);
 
-    const onClickToggleCollapse = useCallback((event) => {
-        let collapse = new Collapse(collapsableBarElement.current, {toggle: false});
-        if (collapsableBarElement.current.classList.contains('hidden')) {
-            collapse.show();
-        } else {
-            collapse.hide();
-        }
-    }, []);
-
-    window.addEventListener('hidden.te.collapse', () => {
-        setDisplayCollapseArrowLeft(false);
-        setDisplayCollapseButtonText(true)
-    });
-
-    window.addEventListener('show.te.collapse', () => {
-        setDisplayCollapseButtonText(false)
-    });
-
-    window.addEventListener('shown.te.collapse', () => {
-        setDisplayCollapseArrowLeft(true);
-    });
+    const onClickToggle = useCallback(
+        () => setCollapsableState(!collapsableCatalog),
+        [collapsableCatalog]
+    );
 
     let nodes = [];
     for (let i = 0; i < 25; i++) {
@@ -77,12 +56,7 @@ export default () => {
 
     return (
         <aside className="absolute z-10 flex flex-col min-w-[5rem] h-screen px-7 box-border bg-slate-50">
-            <div
-                className="flex flex-col h-screen w-96"
-                ref={collapsableBarElement}
-                data-te-collapse-show
-                data-te-collapse-horizontal
-            >
+            <div className={"flex flex-col h-screen w-96" + (collapsableCatalog ? '' : ' hidden')}>
                 {/* Seach Bar */}
                 <div className="flex-1 relative mr-12 my-5 bg-white" data-te-input-wrapper-init>
                     <input
@@ -105,14 +79,14 @@ export default () => {
             {/* Expand / Collapse button */}
             <div
                 className="absolute my-5 right-7 flex flex-col justify-center cursor-pointer"
-                onClick={onClickToggleCollapse}
+                onClick={onClickToggle}
             >
                 <img
-                    src={displayCollapseArrowLeft ? toggle_left : toggle_right}
+                    src={collapsableCatalog ? toggle_left : toggle_right}
                     alt="Toggle"
                     className="w-8 h-8"
                 />
-                <div className={"mt-5 vertical-text" + (displayCollapseButtonText ? '' : ' hidden')}>
+                <div className={"mt-5 vertical-text" + (collapsableCatalog ? ' hidden' : '')}>
                     <strong>Modules catalog</strong>
                 </div>
             </div>
