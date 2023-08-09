@@ -7,9 +7,9 @@ import {
     initTE
 } from "tw-elements";
 import "./style.css"
-import toggle_left from './images/icons/toggle-left.svg';
-import toggle_right from './images/icons/toggle-right.svg';
-import python from './images/icons/python.svg';
+import toggle_left from './static/icons/toggle-left.svg';
+import toggle_right from './static/icons/toggle-right.svg';
+import python from './static/icons/python.svg';
 
 function DraggableNode() {
     const onDragStart = (event, nodeType) => {
