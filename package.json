@@ -10,7 +10,8 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "reactflow": "^11.7.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "fuzzysort": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
