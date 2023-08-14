@@ -126,7 +126,7 @@ class OperatorDefinition:
     @cache
     def get_definition(self, ordered: bool = True, with_children: bool = True) -> Dict[str, Any]:
         definition = {
-            "name": self._operator_class.__name__,
+            "label": self._operator_class.__name__,
             "parameters": [self.ordered_parameters if ordered else self.raw_parameters],
             "children": self._child_classes_names
         }
