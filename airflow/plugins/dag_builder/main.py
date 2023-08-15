@@ -6,14 +6,13 @@ https://github.com/airflow-plugins/Getting-Started/blob/master/Tutorial/creating
 """
 import json
 
-from airflow.utils.log.logging_mixin import LoggingMixin
-from flask import Response
-from flask_appbuilder import BaseView as AppBuilderBaseView
-from flask_appbuilder import expose
+from flask import Response, Blueprint
+from flask_appbuilder import expose, BaseView
 from airflow.security import permissions
 from airflow.www import auth
 from airflow.www.app import csrf
 from airflow.plugins_manager import AirflowPlugin
+from airflow.utils.log.logging_mixin import LoggingMixin
 
 from dag_builder.operators import OperatorDefinitionCatalog
 
@@ -21,9 +20,20 @@ from dag_builder.operators import OperatorDefinitionCatalog
 RESOURCE_DAG_BUILDER = "Dag Builder"
 
 
-class DagBuilder(AppBuilderBaseView):
+# Creating a flask blueprint to integrate the templates and static folder
+blueprint = Blueprint(
+    "dag_builder",
+    __name__,
+    template_folder="templates",
+    static_folder="static",
+    static_url_path="/dagbuilder/static",
+)
+
+
+class DagBuilder(BaseView):
+
     resource_name = "dag_builder"
-    default_view = "status"
+    default_view = "builder"
     csrf_exempt = False
     class_permission_name = RESOURCE_DAG_BUILDER
     base_permissions = ["can_list", "can_read", "can_edit", "can_create", "menu_access"]
@@ -32,6 +42,18 @@ class DagBuilder(AppBuilderBaseView):
     def __init__(self):
         super().__init__()
         self.operator_catalog = OperatorDefinitionCatalog()
+
+    # UI ----------------------------------------------------------------------
+
+    @expose("/ui/builder", methods=["GET"])
+    @auth.has_access([(permissions.ACTION_CAN_READ, RESOURCE_DAG_BUILDER)])
+    def builder(self):
+        return self.render_template(
+            "dag_builder/builder.html",
+            content="Hello galaxy!"
+        )
+
+    # API ---------------------------------------------------------------------
 
     @expose("/api/health", methods=["GET"])
     @csrf.exempt
@@ -58,13 +80,13 @@ class DagBuilder(AppBuilderBaseView):
 class DagBuilderPlugin(LoggingMixin, AirflowPlugin):
     name = "Dag Builder"
     operators = []
-    flask_blueprints = []
+    flask_blueprints = [blueprint]
     hooks = []
     executors = []
     appbuilder_views = [{
-        "name": "API",
+        "name": "Dag Builder",
         "view": DagBuilder(),
-        "category": "Dag Builder",
+        "category": "Dag Builder"
     }]
     appbuilder_menu_items = []
 

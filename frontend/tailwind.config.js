@@ -7,6 +7,10 @@ module.exports = {
   theme: {
     extend: {},
   },
+    corePlugins: {
+      container: false,
+      fontFamily: false
+    },
   plugins: [require("tw-elements/dist/plugin.cjs")],
   darkMode: "class"
 }

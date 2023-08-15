@@ -1,0 +1,15 @@
+{% extends "airflow/main.html" %}
+
+{% block head_css %}
+{{ super() }}
+<link href="/dagbuilder/static/css/main.86ad977f.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block head_js %}
+{{ super() }}
+<script defer="defer" src="/dagbuilder/static/js/main.6a0fbbff.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+<div id="root"></div>
+{% endblock %}

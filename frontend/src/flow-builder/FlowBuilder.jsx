@@ -83,7 +83,7 @@ function Flow() {
     );
 
     return (
-        <div className="flex w-screen h-screen" ref={reactFlowProviderWrapper}>
+        <div className="flex w-full h-full" ref={reactFlowProviderWrapper}>
             <ReactFlowProvider>
                 <div className="relative flex-1 box-border w-full h-full" ref={reactFlowWrapper}>
                     <NodeCatalogBar/>

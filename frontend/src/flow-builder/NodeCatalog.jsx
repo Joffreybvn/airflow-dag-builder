@@ -98,8 +98,8 @@ export default () => {
     )
 
     return (
-        <aside className="absolute z-10 flex flex-col min-w-[5rem] h-screen px-7 box-border bg-slate-50">
-            <div className={"flex flex-col h-screen w-96" + (collapsableCatalog ? '' : ' hidden')}>
+        <aside className="absolute z-10 flex flex-col min-w-[5rem] h-full px-7 box-border bg-slate-50">
+            <div className={"flex flex-col h-full w-96" + (collapsableCatalog ? '' : ' hidden')}>
                 {/* Seach Bar */}
                 <div className="flex-1 relative mr-12 my-5 bg-white max-h-10" data-te-input-wrapper-init>
                     <input

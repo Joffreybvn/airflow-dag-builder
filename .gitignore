@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/.idea
+.python-version
+/notebooks/
+/airflow/logs/
+/frontend/build/
+/frontend/node_modules/
