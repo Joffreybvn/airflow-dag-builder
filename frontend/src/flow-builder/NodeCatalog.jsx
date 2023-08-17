@@ -6,10 +6,10 @@ import {
     Input,
     initTE
 } from "tw-elements";
+import axios from "axios";
 import fuzzysort from 'fuzzysort'
 
 import "./style.css"
-import allOperatorNodesData from './static/demo-data.json';
 import toggle_left from './static/icons/toggle-left.svg';
 import toggle_right from './static/icons/toggle-right.svg';
 import python from "./static/icons/python.svg";
@@ -52,6 +52,7 @@ export default () => {
     const catalogSearchBar = useRef(null);
     const [collapsableCatalog, setCollapsableState] = useState(false);
 
+    const [allOperatorNodesData, setAllOperatorNodesData] = useState([]);
     const [allOperatorCatalog, setAllOperatorCatalog] = useState([]);
     const [filteredOperatorCatalog, setFilteredOperatorCatalog] = useState([]);
     const [displayedOperatorCatalog, setDisplayedOperatorCatalog] = useState([]);
@@ -84,17 +85,39 @@ export default () => {
                 setDisplayedOperatorCatalog(new_nodes);
             }
         },
-        [allOperatorCatalog, setFilteredOperatorCatalog, setDisplayedOperatorCatalog]
+        [
+            allOperatorNodesData,
+            allOperatorCatalog,
+            setFilteredOperatorCatalog,
+            setDisplayedOperatorCatalog
+        ]
     )
 
-    useEffect(() => {
-            let new_nodes = []
-            for (let operator of allOperatorNodesData) {
-                new_nodes.push(<OperatorCatalogNode data={operator}/>)
-            }
-            setAllOperatorCatalog(new_nodes);
-            setDisplayedOperatorCatalog(new_nodes);
-        }, [setAllOperatorCatalog, setDisplayedOperatorCatalog]
+    const loadAllOperatorDefinitionsFromAPI = () => {
+        return axios.get('http://0.0.0.0:8000/demo-data.json')
+            .then((response) => response.data)
+    }
+
+    const createAllOperatorNodesData = (allOperatorDefinitions) => {
+        let new_nodes = []
+        for (let operator of allOperatorDefinitions) {
+            new_nodes.push(<OperatorCatalogNode data={operator}/>)
+        }
+        setAllOperatorCatalog(new_nodes);
+        setDisplayedOperatorCatalog(new_nodes);
+    }
+
+    useEffect(
+        () => {
+            loadAllOperatorDefinitionsFromAPI().then((allOperatorDefinitions) => {
+                setAllOperatorNodesData(allOperatorDefinitions);
+                createAllOperatorNodesData(allOperatorDefinitions);
+            });
+        }, [
+            setAllOperatorNodesData,
+            setAllOperatorCatalog,
+            setDisplayedOperatorCatalog
+        ]
     )
 
     return (
