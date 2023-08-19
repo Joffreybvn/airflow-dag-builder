@@ -1,11 +1,21 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useRef,
+    useState
+} from "react";
 import {
-    Box, CircularProgress, Grid, Input, Center, Alert, AlertIcon, AlertTitle,
-    AlertDescription, GridItem, Flex
+    CircularProgress,
+    Grid,
+    Input,
+    Center,
+    GridItem,
+    Flex
 } from "@chakra-ui/react";
 import fuzzysort from "fuzzysort";
-import Node from "./Node";
 import useOperatorDefinitions from "../../api/useOpertorDefinitions";
+import Node from "./Node";
+import AlertErrorCover from "../../utils/AlertErrorCover";
 
 
 const NodeList = () => {
@@ -31,7 +41,6 @@ const NodeList = () => {
                 for (let operator of filteredOperators) {
                     newNodes.push(<Node key={operator.obj.label} data={operator.obj}/>)
                 }
-                newNodes.push(<GridItem h="1fr"/>)
                 setDisplayedNodesList(newNodes);
             }
         },
@@ -93,23 +102,10 @@ const NodeList = () => {
                     }
                     {
                         error ?
-                            <Alert
-                                status='error'
-                                variant='subtle'
-                                flexDirection='column'
-                                alignItems='center'
-                                justifyContent='center'
-                                textAlign='center'
-                                background='unset'
-                            >
-                                <AlertIcon boxSize='40px' mr={0}/>
-                                <AlertTitle mt={4} mb={1} fontSize='lg'>
-                                    Load failed
-                                </AlertTitle>
-                                <AlertDescription maxWidth='sm'>
-                                    The operator catalog could not be loaded
-                                </AlertDescription>
-                            </Alert>
+                            <AlertErrorCover
+                                title="Load failed"
+                                description="The operator catalog could not be loaded"
+                            />
                             : null
                     }
                     {
