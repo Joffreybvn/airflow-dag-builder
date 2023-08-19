@@ -13,8 +13,8 @@ import ReactFlow, {
     addEdge,
     Panel,
 } from 'reactflow';
-import NodeCatalogBar from './NodeCatalog';
 import NodeSettingBar from './NodeSetting';
+import NodeCatalog from "./node-catalog";
 
 import './style.css';
 import 'reactflow/dist/style.css';
@@ -86,7 +86,7 @@ function Flow() {
         <div className="flex w-full h-full" ref={reactFlowProviderWrapper}>
             <ReactFlowProvider>
                 <div className="relative flex-1 box-border w-full h-full" ref={reactFlowWrapper}>
-                    <NodeCatalogBar/>
+                    <NodeCatalog/>
                     <ReactFlow
                         nodes={nodes}
                         edges={edges}
