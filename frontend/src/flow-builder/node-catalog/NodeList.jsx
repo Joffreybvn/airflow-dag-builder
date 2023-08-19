@@ -21,6 +21,7 @@ import AlertErrorCover from "../../utils/AlertErrorCover";
 const NodeList = () => {
     const {isLoading, error, data} = useOperatorDefinitions();
     const searchBar = useRef(null);
+    const [searchTerm, setSearchTerm] = useState('')
     const [operatorDefinitions, setOperatorDefinitions] = useState([]);
     const [allNodesList, setAllNodesList] = useState([]);
     const [displayedNodesList, setDisplayedNodesList] = useState([]);
@@ -48,6 +49,7 @@ const NodeList = () => {
     )
 
     // Save operator definitions
+    // Triggered when the data is loaded from Airflow API
     useEffect(() => {
         if (data) {
             setOperatorDefinitions(data.data);
@@ -55,6 +57,7 @@ const NodeList = () => {
     }, [data]);
 
     // Generate list of all Operator nodes + display it (default)
+    // Triggered after above function
     useEffect(() => {
         let defaultNodes = []
         for (let operator of operatorDefinitions) {
