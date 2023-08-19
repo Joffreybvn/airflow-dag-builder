@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {
     Box, CircularProgress, Grid, Input, Center, Alert, AlertIcon, AlertTitle,
-    AlertDescription
+    AlertDescription, GridItem, Flex
 } from "@chakra-ui/react";
 import fuzzysort from "fuzzysort";
 import Node from "./Node";
@@ -31,6 +31,7 @@ const NodeList = () => {
                 for (let operator of filteredOperators) {
                     newNodes.push(<Node key={operator.obj.label} data={operator.obj}/>)
                 }
+                newNodes.push(<GridItem h="1fr"/>)
                 setDisplayedNodesList(newNodes);
             }
         },
@@ -58,10 +59,11 @@ const NodeList = () => {
         <Grid
             templateAreas={`"search" "list"`}
             gridTemplateRows='50px 1fr'
-            maxHeight='100%'
+            h='100%'
+            maxH='100%'
             gap={2}
         >
-            <Box
+            <GridItem
                 area='search'
                 marginRight='42px'
             >
@@ -71,48 +73,50 @@ const NodeList = () => {
                     ref={searchBar}
                     onChange={listFuzzySearch}
                 />
-            </Box>
-            <Grid
+            </GridItem>
+            <GridItem
                 area='list'
-                gap={2}
-                width='350px'
-                height='100%'
-                maxHeight='100%'
                 overflowY="scroll"
-                paddingRight='10px'
             >
-                {
-                    isLoading ?
-                        <Center>
-                            <CircularProgress isIndeterminate/>
-                        </Center>
-                        : null
-                }
-                {
-                    error ?
-                        <Alert
-                            status='error'
-                            variant='subtle'
-                            flexDirection='column'
-                            alignItems='center'
-                            justifyContent='center'
-                            textAlign='center'
-                            background='unset'
-                        >
-                            <AlertIcon boxSize='40px' mr={0}/>
-                            <AlertTitle mt={4} mb={1} fontSize='lg'>
-                                Load failed
-                            </AlertTitle>
-                            <AlertDescription maxWidth='sm'>
-                                The operator catalog could not be loaded
-                            </AlertDescription>
-                        </Alert>
-                        : null
-                }
-                {
-                    displayedNodesList ? displayedNodesList : null
-                }
-            </Grid>
+                <Flex
+                    flexDirection="column"
+                    gap={2}
+                    width='350px'
+                    paddingRight='10px'
+                >
+                    {
+                        isLoading ?
+                            <Center>
+                                <CircularProgress isIndeterminate/>
+                            </Center>
+                            : null
+                    }
+                    {
+                        error ?
+                            <Alert
+                                status='error'
+                                variant='subtle'
+                                flexDirection='column'
+                                alignItems='center'
+                                justifyContent='center'
+                                textAlign='center'
+                                background='unset'
+                            >
+                                <AlertIcon boxSize='40px' mr={0}/>
+                                <AlertTitle mt={4} mb={1} fontSize='lg'>
+                                    Load failed
+                                </AlertTitle>
+                                <AlertDescription maxWidth='sm'>
+                                    The operator catalog could not be loaded
+                                </AlertDescription>
+                            </Alert>
+                            : null
+                    }
+                    {
+                        displayedNodesList ? displayedNodesList : null
+                    }
+                </Flex>
+            </GridItem>
         </Grid>
     )
 }

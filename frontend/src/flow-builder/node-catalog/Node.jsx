@@ -20,6 +20,8 @@ const Node = ({data}) => {
             gridTemplateRows="1fr 1fr"
             gridTemplateColumns="4px 48px 1fr"
             columnGap={2}
+            h="66px"
+            maxh="66px"
             border='1px'
             borderRadius="md"
             borderColor="rgb(30 41 59)"

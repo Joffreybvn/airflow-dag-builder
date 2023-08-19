@@ -22,7 +22,11 @@ const NodeCatalog = () => {
             padding={7}
             background="rgb(248 250 252)"
         >
-            {isCollapsed ? <NodeList/> : null}
+            <Box
+                display={isCollapsed ? 'block' : 'none'}
+            >
+                <NodeList/>
+            </Box>
             <Flex
                 flexDirection='column'
                 position='absolute'
