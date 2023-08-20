@@ -5,9 +5,23 @@ import {
     AccordionPanel,
     Box
 } from "@chakra-ui/react";
+import {
+    useEffect,
+    useState
+} from "react";
+import InputText from "./form/InputText";
 
 
-const SettingsAccordionItem = ({children, name, isRequired}) => {
+const SettingsAccordionItem = ({name, isRequired, rawParameters}) => {
+    const [parameters, setParameters] = useState([]);
+
+    useEffect(() => {
+        let parameters = [];
+        for (let parameter of Object.values(rawParameters)) {
+            parameters.push(<InputText name={parameter.name}/>)
+        }
+        setParameters(parameters)
+    }, [rawParameters, setParameters]);
 
     return (
         <AccordionItem>
@@ -27,7 +41,7 @@ const SettingsAccordionItem = ({children, name, isRequired}) => {
                 pb={4}
                 background="white"
             >
-                { children }
+                { parameters }
             </AccordionPanel>
         </AccordionItem>
     )

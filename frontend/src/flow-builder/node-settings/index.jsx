@@ -1,5 +1,6 @@
 import {
-    useCallback, useEffect, useRef,
+    useCallback,
+    useEffect,
     useState
 } from 'react';
 import {
@@ -8,7 +9,6 @@ import {
     Flex
 } from "@chakra-ui/react";
 import DragVertical from "../../utils/DragVertical";
-import InputText from "./form/InputText";
 import SettingsAccordionItem from "./SettingsAccordionItem";
 
 
@@ -16,6 +16,8 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
     const [minWidth, maxWidth] = [60, 90];
     const [width, setWidth] = useState(400);
     const [displaySettings, setDisplaySettings] = useState(true);
+    const [requiredSettings, setRequiredSettings] = useState([]);
+    const [optionalSettings, setOptionalSettings] = useState([]);
 
     // Set drag ghost image to empty image
     const disableGhostImage = useCallback((event) => {
@@ -33,32 +35,40 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
         }
     }, [panelWrapper, minWidth, maxWidth]);
 
-    let requiredSettings = [];
-    let optionalSettings = [];
+    // Generate required and optional settings
+    useEffect(() => {
+        if (selectedNode.data !== undefined) {
+            const newRequiredSettings = [];
+            const newOptionalSettings = [];
 
-    if (selectedNode.data !== undefined) {
-        for (let operatorSettings of selectedNode.data.parameters) {
+            const operatorNames = [selectedNode.data.label].concat(selectedNode.data.children);
+            for (let [i, operatorSettings] of selectedNode.data.parameters.entries()) {
 
-            let requiredSettingsBlock = [];
-            for (let requiredSetting of Object.values(operatorSettings[0])) {
-                requiredSettingsBlock.push(<InputText name={requiredSetting.name}/>)
+                if (operatorSettings[0] !== undefined) {
+                    newRequiredSettings.push(
+                        <SettingsAccordionItem
+                            name={operatorNames[i]}
+                            isRequired={true}
+                            rawParameters={operatorSettings[0]}
+                        />
+                    )
+                }
+
+                if (operatorSettings[1] !== undefined) {
+                    newOptionalSettings.push(
+                        <SettingsAccordionItem
+                            name={operatorNames[i]}
+                            isRequired={false}
+                            rawParameters={operatorSettings[1]}
+                        />
+                    )
+                }
             }
-            requiredSettings.push(
-                <SettingsAccordionItem
-                    name="Operator"
-                    isRequired={true}
-                >{requiredSettingsBlock}
-                </SettingsAccordionItem>
-            )
 
-            // for (let optionalSettingList of operatorSettings[1]) {
-            //     requiredSettings.push(<InputText name={optionalSettingList.name}/>)
-            // }
+            setRequiredSettings(newRequiredSettings);
+            setOptionalSettings(newOptionalSettings)
         }
-        // for (let parameter of Object.values(selectedNode.data.parameters[0][0])) {
-        //     requiredSettings.push(<InputText name={parameter.name}/>)
-        // }
-    }
+    }, [selectedNode.data]);
 
     // Display Node settings only if there is enough space
     // and if a node is selected
@@ -100,18 +110,7 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
                     displaySettings ?
                         <Accordion>
                             {requiredSettings}
-                            {/*<SettingsAccordionItem*/}
-                            {/*    name="AthenaOperator"*/}
-                            {/*    isRequired={true}*/}
-                            {/*>*/}
-                            {/*    { requiredSettings }*/}
-                            {/*</SettingsAccordionItem>*/}
-                            {/*<SettingsAccordionItem*/}
-                            {/*    name="BaseOperator"*/}
-                            {/*    isRequired={true}*/}
-                            {/*>*/}
-                            {/*    { requiredSettings }*/}
-                            {/*</SettingsAccordionItem>*/}
+                            {optionalSettings}
                         </Accordion>
                         : null
                 }
