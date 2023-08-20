@@ -6,7 +6,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-const SettingInputText = ({name}) => {
+
+const InputText = ({name}) => {
     return (
         <Grid
             templateColumns="auto auto 1fr"
@@ -42,4 +43,4 @@ const SettingInputText = ({name}) => {
     )
 }
 
-export default SettingInputText;
+export default InputText;

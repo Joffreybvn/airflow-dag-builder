@@ -6,19 +6,16 @@ import {
 import ReactFlow, {
     ReactFlowProvider,
     Background,
-    useNodesState,
-    useEdgesState,
-    addEdge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import {
     Flex,
     Box
 } from "@chakra-ui/react";
+import {shallow} from 'zustand/shallow';
+import useStore from '../store';
 import NodeSetting from './node-settings';
 import NodeCatalog from "./node-catalog";
-import defaultNodes from '../static/graph/nodes.js';
-import defaultEdges from '../static/graph/edges.js';
 
 
 let id = 0;
@@ -27,14 +24,17 @@ const getId = () => `node_${id++}`;
 const DagBuilder = () => {
     const reactFlowWrapper = useRef(null);
     const reactFlowProviderWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const [selectedNode, setSelectedNode] = useState(false);
-
-    const onConnect = useCallback((params) =>
-        setEdges((eds) => addEdge(params, eds)), [setEdges]
-    );
+    const {nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect} = useStore(
+        (state) => ({
+            nodes: state.nodes,
+            edges: state.edges,
+            setNodes: state.setNodes,
+            onNodesChange: state.onNodesChange,
+            onEdgesChange: state.onEdgesChange,
+            onConnect: state.onConnect,
+        }), shallow);
 
     // Node dragging and dropping to the main frame
     const onDragOver = useCallback((event) => {
@@ -66,8 +66,7 @@ const DagBuilder = () => {
                     position,
                     data: data,
                 };
-
-                setNodes((nds) => nds.concat(newNode));
+                setNodes(newNode);
             }
         },
         [reactFlowInstance, setNodes]

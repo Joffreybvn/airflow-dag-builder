@@ -1,13 +1,15 @@
 import {
-    useCallback,
+    useCallback, useEffect, useRef,
     useState
 } from 'react';
 import {
+    Accordion,
     Center,
     Flex
 } from "@chakra-ui/react";
 import DragVertical from "../../utils/DragVertical";
-import SettingInputText from "./SettingInputText";
+import InputText from "./form/InputText";
+import SettingsAccordionItem from "./SettingsAccordionItem";
 
 
 const NodeSetting = ({panelWrapper, selectedNode = null}) => {
@@ -28,23 +30,45 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
             let newWidth = panelBounds.width - event.clientX;
             newWidth = Math.min(Math.max(newWidth, minWidth), panelBounds.width - maxWidth)
             setWidth(newWidth);
-
-            if (newWidth === minWidth) {
-                setDisplaySettings(false);
-            } else {
-                setDisplaySettings(true)
-            }
         }
     }, [panelWrapper, minWidth, maxWidth]);
 
+    let requiredSettings = [];
+    let optionalSettings = [];
 
-    let settings = [];
     if (selectedNode.data !== undefined) {
-        console.log(Object.entries(selectedNode.data.parameters[0][0]));
-        for (let parameter of Object.values(selectedNode.data.parameters[0][0])) {
-            settings.push(<SettingInputText name={parameter.name}/>)
+        for (let operatorSettings of selectedNode.data.parameters) {
+
+            let requiredSettingsBlock = [];
+            for (let requiredSetting of Object.values(operatorSettings[0])) {
+                requiredSettingsBlock.push(<InputText name={requiredSetting.name}/>)
+            }
+            requiredSettings.push(
+                <SettingsAccordionItem
+                    name="Operator"
+                    isRequired={true}
+                >{requiredSettingsBlock}
+                </SettingsAccordionItem>
+            )
+
+            // for (let optionalSettingList of operatorSettings[1]) {
+            //     requiredSettings.push(<InputText name={optionalSettingList.name}/>)
+            // }
         }
+        // for (let parameter of Object.values(selectedNode.data.parameters[0][0])) {
+        //     requiredSettings.push(<InputText name={parameter.name}/>)
+        // }
     }
+
+    // Display Node settings only if there is enough space
+    // and if a node is selected
+    useEffect(() => {
+        if ((width === minWidth) || (requiredSettings.length === 0)) {
+            setDisplaySettings(false);
+        } else {
+            setDisplaySettings(true)
+        }
+    }, [width, minWidth, requiredSettings]);
 
     return (
         <Flex
@@ -73,7 +97,23 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
                 overflow="hidden"
             >
                 {
-                    displaySettings ? settings : null
+                    displaySettings ?
+                        <Accordion>
+                            {requiredSettings}
+                            {/*<SettingsAccordionItem*/}
+                            {/*    name="AthenaOperator"*/}
+                            {/*    isRequired={true}*/}
+                            {/*>*/}
+                            {/*    { requiredSettings }*/}
+                            {/*</SettingsAccordionItem>*/}
+                            {/*<SettingsAccordionItem*/}
+                            {/*    name="BaseOperator"*/}
+                            {/*    isRequired={true}*/}
+                            {/*>*/}
+                            {/*    { requiredSettings }*/}
+                            {/*</SettingsAccordionItem>*/}
+                        </Accordion>
+                        : null
                 }
             </Flex>
         </Flex>
