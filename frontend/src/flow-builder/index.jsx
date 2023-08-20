@@ -1,32 +1,30 @@
 import {
     useCallback,
-    useMemo,
     useRef,
     useState
 } from 'react';
 import ReactFlow, {
     ReactFlowProvider,
-    Controls,
     Background,
     useNodesState,
     useEdgesState,
     addEdge,
-    Panel,
 } from 'reactflow';
-import NodeSettingBar from './NodeSetting';
-import NodeCatalog from "./node-catalog";
-
-import './style.css';
 import 'reactflow/dist/style.css';
-
-import defaultNodes from './graph/nodes.js';
-import defaultEdges from './graph/edges.js';
+import {
+    Flex,
+    Box
+} from "@chakra-ui/react";
+import NodeSetting from './node-settings';
+import NodeCatalog from "./node-catalog";
+import defaultNodes from '../static/graph/nodes.js';
+import defaultEdges from '../static/graph/edges.js';
 
 
 let id = 0;
 const getId = () => `node_${id++}`;
 
-function Flow() {
+const DagBuilder = () => {
     const reactFlowWrapper = useRef(null);
     const reactFlowProviderWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
@@ -43,7 +41,8 @@ function Flow() {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     }, []);
-    const onDrop = useCallback(
+
+    const createFlowNode = useCallback(
         (event) => {
             event.preventDefault();
 
@@ -71,21 +70,29 @@ function Flow() {
                 setNodes((nds) => nds.concat(newNode));
             }
         },
-        [reactFlowInstance]
+        [reactFlowInstance, setNodes]
     );
 
     // Node settings panel
-    const onNodeClick = useCallback((event, node) =>
+    const selectNode = useCallback((event, node) =>
         setSelectedNode(node), []
     );
-    const onPaneClick = useCallback((event) =>
+    const unselectNode = useCallback((event) =>
         setSelectedNode(false), []
     );
 
     return (
-        <div className="flex w-full h-full" ref={reactFlowProviderWrapper}>
+        <Flex
+            w="100%"
+            h="100%"
+            ref={reactFlowProviderWrapper}
+        >
             <ReactFlowProvider>
-                <div className="relative flex-1 box-border w-full h-full" ref={reactFlowWrapper}>
+                <Box
+                    flex={1}
+                    position="relative"
+                    ref={reactFlowWrapper}
+                >
                     <NodeCatalog/>
                     <ReactFlow
                         nodes={nodes}
@@ -94,24 +101,24 @@ function Flow() {
                         onEdgesChange={onEdgesChange}
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}
-                        onDrop={onDrop}
+                        onDrop={createFlowNode}
                         onDragOver={onDragOver}
-                        onNodeClick={onNodeClick}
-                        onPaneClick={onPaneClick}
+                        onNodeClick={selectNode}
+                        onPaneClick={unselectNode}
                         className="flex"
                         fitView
                     >
                         {/*<Controls />*/}
                         <Background/>
                     </ReactFlow>
-                </div>
-                <NodeSettingBar
+                </Box>
+                <NodeSetting
                     panelWrapper={reactFlowProviderWrapper}
                     selectedNode={selectedNode}
                 />
             </ReactFlowProvider>
-        </div>
+        </Flex>
     );
 }
 
-export default Flow;
+export default DagBuilder;

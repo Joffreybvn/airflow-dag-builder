@@ -1,18 +1,18 @@
 import {ChakraBaseProvider, extendBaseTheme} from '@chakra-ui/react'
 import chakraTheme from '@chakra-ui/theme'
-import FlowBuilder from "./flow-builder/FlowBuilder";
 import {QueryClient, QueryClientProvider} from "react-query";
+import DagBuilder from "./flow-builder";
 
 
 const {
     Button, Input, Flex, Box, Grid, Image, CircularProgress, Center, Alert,
-    AlertIcon, AlertTitle, AlertDescription, GridItem
+    AlertIcon, AlertTitle, AlertDescription, GridItem, Badge
 } = chakraTheme.components
 
 const theme = extendBaseTheme({
     components: {
         Button, Input, Flex, Box, Grid, Image, CircularProgress, Center, Alert,
-        AlertIcon, AlertTitle, AlertDescription, GridItem
+        AlertIcon, AlertTitle, AlertDescription, GridItem, Badge
     },
 })
 
@@ -39,7 +39,7 @@ function App() {
     return (
         <ChakraBaseProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
-                <FlowBuilder/>
+                <DagBuilder/>
             </QueryClientProvider>
         </ChakraBaseProvider>
     );

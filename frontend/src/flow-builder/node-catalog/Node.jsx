@@ -1,6 +1,7 @@
 import React from "react";
-import {Flex, Grid, GridItem, Image} from "@chakra-ui/react";
-import python from "../static/icons/python.svg";
+import {Center, Grid, GridItem, Image} from "@chakra-ui/react";
+import DragVertical from "../../utils/DragVertical";
+import python from "../../static/operators/python.svg";
 
 
 const Node = ({data}) => {
@@ -34,14 +35,12 @@ const Node = ({data}) => {
             <GridItem
                 area='drag'
             >
-                <Flex
-                    flexDir="column"
-                    justifyContent="center"
+                <Center
                     w="100%"
                     h="100%"
                 >
-                    <div className="w-1 h-5 border-x border-slate-500"></div>
-                </Flex>
+                    <DragVertical/>
+                </Center>
             </GridItem>
             <GridItem area='icon'>
                 <Image

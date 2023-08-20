@@ -1,6 +1,6 @@
 import {Box, Flex, Image} from "@chakra-ui/react";
-import toggle_left from "../static/icons/toggle-left.svg";
-import toggle_right from "../static/icons/toggle-right.svg";
+import toggle_left from "../../static/icons/toggle-left.svg";
+import toggle_right from "../../static/icons/toggle-right.svg";
 import React, {useCallback, useState} from "react";
 import NodeList from "./NodeList";
 
