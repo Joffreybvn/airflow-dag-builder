@@ -1,9 +1,3 @@
-"""
-Plugin that adds a "Mozilla" entry to the top bar with some useful links.
-
-Based on an example at
-https://github.com/airflow-plugins/Getting-Started/blob/master/Tutorial/creating-ui-modification.md
-"""
 import json
 
 from flask import Response, Blueprint

@@ -13,6 +13,8 @@ import DagBuilder from "./flow-builder";
 const {
     Button,
     Input,
+    InputGroup,
+    InputLeftAddon,
     Flex,
     Box,
     Grid,
@@ -36,6 +38,8 @@ const theme = extendBaseTheme({
     components: {
         Button,
         Input,
+        InputGroup,
+        InputLeftAddon,
         Flex,
         Box,
         Grid,

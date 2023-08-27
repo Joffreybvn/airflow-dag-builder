@@ -9,15 +9,23 @@ import {
     Flex
 } from "@chakra-ui/react";
 import DragVertical from "../../utils/DragVertical";
-import SettingsAccordionItem from "./SettingsAccordionItem";
+import SettingsBlock from "./SettingsBlock";
+import {isObjectEmpty} from "../../utils/functools";
 
 
-const NodeSetting = ({panelWrapper, selectedNode = null}) => {
+const generateSettingId = (nodeId, operatorName, isRequired) => {
+    let id = nodeId + '_' + operatorName;
+    if (isRequired) {
+        id += '_required';
+    }
+    return id
+}
+
+const NodeSetting = ({panelWrapper, selectedNode = undefined}) => {
     const [minWidth, maxWidth] = [60, 90];
     const [width, setWidth] = useState(400);
-    const [displaySettings, setDisplaySettings] = useState(true);
-    const [requiredSettings, setRequiredSettings] = useState([]);
-    const [optionalSettings, setOptionalSettings] = useState([]);
+    const [settings, setSettings] = useState({});
+    let displayedSettings;
 
     // Set drag ghost image to empty image
     const disableGhostImage = useCallback((event) => {
@@ -37,16 +45,25 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
 
     // Generate required and optional settings
     useEffect(() => {
-        if (selectedNode.data !== undefined) {
-            const newRequiredSettings = [];
-            const newOptionalSettings = [];
+        if ((selectedNode !== undefined) && !(settings.hasOwnProperty(selectedNode.id))) {
+            const newSettings = {
+                required: [],
+                optional: []
+            }
 
             const operatorNames = [selectedNode.data.label].concat(selectedNode.data.children);
             for (let [i, operatorSettings] of selectedNode.data.parameters.entries()) {
 
-                if (operatorSettings[0] !== undefined) {
-                    newRequiredSettings.push(
-                        <SettingsAccordionItem
+                if ((operatorSettings[0] !== undefined) && !isObjectEmpty(operatorSettings[0])) {
+                    newSettings.required.push(
+                        <SettingsBlock
+                            key={
+                            generateSettingId(
+                                operatorNames[i],
+                                selectedNode.id,
+                                true
+                            )}
+                            nodeId={selectedNode.id}
                             name={operatorNames[i]}
                             isRequired={true}
                             rawParameters={operatorSettings[0]}
@@ -54,9 +71,16 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
                     )
                 }
 
-                if (operatorSettings[1] !== undefined) {
-                    newOptionalSettings.push(
-                        <SettingsAccordionItem
+                if ((operatorSettings[1] !== undefined) && !isObjectEmpty(operatorSettings[1])) {
+                    newSettings.optional.push(
+                        <SettingsBlock
+                            key={
+                            generateSettingId(
+                                operatorNames[i],
+                                selectedNode.id,
+                                true
+                            )}
+                            nodeId={selectedNode.id}
                             name={operatorNames[i]}
                             isRequired={false}
                             rawParameters={operatorSettings[1]}
@@ -65,20 +89,28 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
                 }
             }
 
-            setRequiredSettings(newRequiredSettings);
-            setOptionalSettings(newOptionalSettings)
+            const nodeSettings = {};
+            nodeSettings[selectedNode.id] = newSettings;
+            setSettings({...settings,...nodeSettings});
         }
-    }, [selectedNode.data]);
+    }, [selectedNode, settings]);
 
-    // Display Node settings only if there is enough space
-    // and if a node is selected
-    useEffect(() => {
-        if ((width === minWidth) || (requiredSettings.length === 0)) {
-            setDisplaySettings(false);
-        } else {
-            setDisplaySettings(true)
-        }
-    }, [width, minWidth, requiredSettings]);
+
+    // Display Node settings only if there is enough space and if a node is selected
+    if (
+        (selectedNode === undefined)
+        || (settings[selectedNode.id] === undefined)
+        || (width === minWidth)
+    ) {
+        displayedSettings = (<Accordion></Accordion>)
+    } else {
+        displayedSettings = (
+            <Accordion>
+                {settings[selectedNode.id].required}
+                {settings[selectedNode.id].optional}
+            </Accordion>
+        )
+    }
 
     return (
         <Flex
@@ -106,14 +138,7 @@ const NodeSetting = ({panelWrapper, selectedNode = null}) => {
                 padding="1.25rem"
                 overflow="hidden"
             >
-                {
-                    displaySettings ?
-                        <Accordion>
-                            {requiredSettings}
-                            {optionalSettings}
-                        </Accordion>
-                        : null
-                }
+                {displayedSettings}
             </Flex>
         </Flex>
     );

@@ -19,13 +19,13 @@ import NodeCatalog from "./node-catalog";
 
 
 let id = 0;
-const getId = () => `node_${id++}`;
+const generateNodeId = () => `node_${id++}`;
 
 const DagBuilder = () => {
     const reactFlowWrapper = useRef(null);
     const reactFlowProviderWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    const [selectedNode, setSelectedNode] = useState(false);
+    const [selectedNode, setSelectedNode] = useState(undefined);
     const {nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect} = useStore(
         (state) => ({
             nodes: state.nodes,
@@ -61,7 +61,7 @@ const DagBuilder = () => {
                     y: event.clientY - reactFlowBounds.top,
                 });
                 const newNode = {
-                    id: getId(),
+                    id: generateNodeId(),
                     type: data.nodeType,
                     position,
                     data: data,
@@ -76,8 +76,8 @@ const DagBuilder = () => {
     const selectNode = useCallback((event, node) =>
         setSelectedNode(node), []
     );
-    const unselectNode = useCallback((event) =>
-        setSelectedNode(false), []
+    const unselectNode = useCallback(() =>
+        setSelectedNode(undefined), []
     );
 
     return (

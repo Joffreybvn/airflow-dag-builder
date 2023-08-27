@@ -1,45 +1,42 @@
+import React, {
+    useEffect
+} from "react";
 import {
-    Grid,
-    GridItem,
     Input,
-    Badge
+    Badge,
+    InputGroup,
+    InputLeftAddon,
+    InputRightElement
 } from "@chakra-ui/react";
-import React from "react";
+import useStore from '../../../store';
+import {shallow} from "zustand/shallow";
 
 
-const InputText = ({name}) => {
+const InputText = ({nodeId, name}) => {
+    const {getNodeSetting, setNodeSetting} = useStore((state) => ({
+        getNodeSetting: state.getNodeSetting,
+        setNodeSetting: state.setNodeSetting
+    }), shallow);
+    const [value] = React.useState(getNodeSetting(nodeId, name));
+
     return (
-        <Grid
-            templateColumns="auto auto 1fr"
-            gap={2}
-            padding={1}
-        >
-            <GridItem
-                display="flex"
-                h="fit-content"
-                m="auto"
-            >
+        <InputGroup size='sm'>
+            <InputLeftAddon children={name} />
+            <Input
+                value={value}
+                onChange={(event) => {
+                    setNodeSetting(nodeId, name, event.target.value)
+                }}
+            />
+            <InputRightElement width='4rem'>
                 <Badge
                     variant='outline'
                     colorScheme='green'
                 >
                     Text
                 </Badge>
-            </GridItem>
-            <GridItem
-                display="flex"
-                h="fit-content"
-                m="auto"
-                className="setting_name"
-            >
-                {name}
-            </GridItem>
-            <GridItem>
-                <Input
-                    size='sm'
-                />
-            </GridItem>
-        </Grid>
+            </InputRightElement>
+        </InputGroup>
     )
 }
 

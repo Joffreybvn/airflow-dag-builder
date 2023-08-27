@@ -6,7 +6,7 @@ import python from "../../static/operators/python.svg";
 
 const Node = ({data}) => {
 
-    const sendNodeData = (event, nodeType) => {
+    const createNodeInstance = (event, nodeType) => {
         data['nodeType'] = nodeType
         event.dataTransfer.setData('application/reactflow', JSON.stringify(data));
         event.dataTransfer.effectAllowed = 'move';
@@ -30,7 +30,7 @@ const Node = ({data}) => {
             background="white"
             cursor="grabbing"
             draggable
-            onDragStart={(event) => sendNodeData(event, 'default')}
+            onDragStart={(event) => createNodeInstance(event, 'default')}
         >
             <GridItem
                 area='drag'

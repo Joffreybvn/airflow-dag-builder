@@ -11,10 +11,10 @@ import initialEdges from './static/graph/edges';
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useStore = create((set, get) => (
     {
-        /* ReactFlow state management */
+        // Flow state management ----------------------------------------------
 
-        nodes: initialNodes,
-        edges: initialEdges,
+        nodes: [],
+        edges: [],
 
         setNodes: (nodes) => {
             set({
@@ -37,6 +37,30 @@ const useStore = create((set, get) => (
                 edges: addEdge(connection, get().edges),
             });
         },
+
+        // Node Settings state management -------------------------------------
+
+        nodeSettings: {},
+
+        setNodeSetting: (nodeId, settingName, value) => {
+            let nodeSettings = get().nodeSettings;
+
+            if (!(nodeId in nodeSettings)) {
+                nodeSettings[nodeId] = {};
+            }
+            nodeSettings[nodeId][settingName] = value
+            set({nodeSettings: nodeSettings});
+        },
+
+        getNodeSetting: (nodeId, settingName) => {
+            let nodeSettings = get().nodeSettings;
+            if (
+                (nodeId in nodeSettings)
+                && (settingName in nodeSettings[nodeId])
+            ) {
+                return nodeSettings[nodeId][settingName]
+            }
+        }
     })
 );
 
